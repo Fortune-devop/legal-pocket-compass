@@ -14,6 +14,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [jurisdiction, setJurisdiction] = useState("");
+  const [activeTab, setActiveTab] = useState("login");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +28,10 @@ const Login = () => {
     console.log("Signup attempted with:", { email, password, jurisdiction });
   };
 
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
+
   return (
     <div className="container flex items-center justify-center min-h-[calc(100vh-64px)] px-4 py-12">
       <div className="w-full max-w-md">
@@ -38,7 +43,7 @@ const Login = () => {
           </p>
         </div>
         
-        <Tabs defaultValue="login" className="w-full">
+        <Tabs defaultValue="login" value={activeTab} onValueChange={handleTabChange}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="login">Login</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
@@ -92,12 +97,13 @@ const Login = () => {
               <CardFooter className="flex flex-col">
                 <div className="mt-4 text-center text-sm text-muted-foreground">
                   Don't have an account?{" "}
-                  <TabsTrigger
-                    value="signup"
-                    className="inline p-0 h-auto text-primary hover:underline bg-transparent"
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto text-primary"
+                    onClick={() => handleTabChange("signup")}
                   >
                     Sign up
-                  </TabsTrigger>
+                  </Button>
                 </div>
               </CardFooter>
             </Card>
@@ -161,12 +167,13 @@ const Login = () => {
               <CardFooter className="flex flex-col">
                 <div className="mt-4 text-center text-sm text-muted-foreground">
                   Already have an account?{" "}
-                  <TabsTrigger
-                    value="login"
-                    className="inline p-0 h-auto text-primary hover:underline bg-transparent"
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto text-primary"
+                    onClick={() => handleTabChange("login")}
                   >
                     Login
-                  </TabsTrigger>
+                  </Button>
                 </div>
               </CardFooter>
             </Card>

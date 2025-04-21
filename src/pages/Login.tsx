@@ -1,15 +1,40 @@
 
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield } from "lucide-react";
+import { JurisdictionSelector } from "@/components/jurisdiction-selector";
+import { AlertCircle, Shield } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [jurisdiction, setJurisdiction] = useState("federal");
   const [activeTab, setActiveTab] = useState("login");
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    // This would normally connect to a backend
+    console.log("Login attempted with:", { email, password, jurisdiction });
+  };
+
+  const handleSignup = (e: React.FormEvent) => {
+    e.preventDefault();
+    // This would normally connect to a backend
+    console.log("Signup attempted with:", { name, email, password, jurisdiction });
+  };
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
+  };
+
+  const handleJurisdictionSelect = (value: string) => {
+    setJurisdiction(value);
   };
 
   return (
@@ -22,13 +47,13 @@ const Login = () => {
             Legal information made accessible
           </p>
         </div>
-
+        
         <Tabs defaultValue="login" value={activeTab} onValueChange={handleTabChange}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="login">Login</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
-
+          
           <TabsContent value="login">
             <Card>
               <CardHeader>
@@ -38,17 +63,40 @@ const Login = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {/* Placeholder login form */}
-                <form className="space-y-4">
-                  <div>
-                    <label className="block mb-1 text-sm font-medium">Email</label>
-                    <input className="w-full rounded border px-3 py-2" type="email" placeholder="you@example.com" autoComplete="email" />
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your.email@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
                   </div>
-                  <div>
-                    <label className="block mb-1 text-sm font-medium">Password</label>
-                    <input className="w-full rounded border px-3 py-2" type="password" placeholder="••••••••" autoComplete="current-password" />
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="password">Password</Label>
+                      <Link
+                        to="/forgot-password"
+                        className="text-xs text-primary hover:text-primary/80 transition-colors"
+                      >
+                        Forgot password?
+                      </Link>
+                    </div>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
                   </div>
-                  <Button className="w-full mt-2">Login</Button>
+                  <Button type="submit" className="w-full">
+                    Login
+                  </Button>
                 </form>
               </CardContent>
               <CardFooter className="flex flex-col">
@@ -65,7 +113,7 @@ const Login = () => {
               </CardFooter>
             </Card>
           </TabsContent>
-
+          
           <TabsContent value="signup">
             <Card>
               <CardHeader>
@@ -75,17 +123,62 @@ const Login = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {/* Placeholder signup form */}
-                <form className="space-y-4">
-                  <div>
-                    <label className="block mb-1 text-sm font-medium">Email</label>
-                    <input className="w-full rounded border px-3 py-2" type="email" placeholder="you@example.com" autoComplete="email" />
+                <form onSubmit={handleSignup} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-name">Name</Label>
+                    <Input
+                      id="signup-name"
+                      type="text"
+                      placeholder="Your full name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                    />
                   </div>
-                  <div>
-                    <label className="block mb-1 text-sm font-medium">Password</label>
-                    <input className="w-full rounded border px-3 py-2" type="password" placeholder="Create a password" autoComplete="new-password" />
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-email">Email</Label>
+                    <Input
+                      id="signup-email"
+                      type="email"
+                      placeholder="your.email@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
                   </div>
-                  <Button className="w-full mt-2">Sign Up</Button>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-password">Password</Label>
+                    <Input
+                      id="signup-password"
+                      type="password"
+                      placeholder="Create a strong password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="jurisdiction">Primary Jurisdiction</Label>
+                    <JurisdictionSelector
+                      defaultValue={jurisdiction}
+                      onSelect={handleJurisdictionSelect}
+                      className="w-full"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      This helps us provide more relevant legal information
+                    </p>
+                  </div>
+                  <Alert variant="default" className="bg-legal-yellow/20 border-legal-yellow">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription className="text-xs">
+                      By signing up, you acknowledge that LegalPocket provides information,
+                      not legal advice. Always consult with a qualified attorney for specific
+                      legal concerns.
+                    </AlertDescription>
+                  </Alert>
+                  <Button type="submit" className="w-full">
+                    Create Account
+                  </Button>
                 </form>
               </CardContent>
               <CardFooter className="flex flex-col">

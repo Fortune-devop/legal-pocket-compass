@@ -2,38 +2,17 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { JurisdictionSelector } from "@/components/jurisdiction-selector";
-import { AlertCircle, Shield } from "lucide-react";
+import { Shield, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { SignIn, SignUp } from "@clerk/clerk-react";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [jurisdiction, setJurisdiction] = useState("federal");
   const [activeTab, setActiveTab] = useState("login");
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    // This would normally connect to a backend
-    console.log("Login attempted with:", { email, password, jurisdiction });
-  };
-
-  const handleSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-    // This would normally connect to a backend
-    console.log("Signup attempted with:", { email, password, jurisdiction });
-  };
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
-  };
-
-  const handleJurisdictionSelect = (value: string) => {
-    setJurisdiction(value);
   };
 
   return (
@@ -62,41 +41,7 @@ const Login = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="your.email@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="password">Password</Label>
-                      <Link
-                        to="/forgot-password"
-                        className="text-xs text-primary hover:text-primary/80 transition-colors"
-                      >
-                        Forgot password?
-                      </Link>
-                    </div>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <Button type="submit" className="w-full">
-                    Login
-                  </Button>
-                </form>
+                <SignIn path="/login" routing="path" />
               </CardContent>
               <CardFooter className="flex flex-col">
                 <div className="mt-4 text-center text-sm text-muted-foreground">
@@ -122,52 +67,15 @@ const Login = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSignup} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      placeholder="your.email@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
-                    <Input
-                      id="signup-password"
-                      type="password"
-                      placeholder="Create a strong password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="jurisdiction">Primary Jurisdiction</Label>
-                    <JurisdictionSelector
-                      defaultValue={jurisdiction}
-                      onSelect={handleJurisdictionSelect}
-                      className="w-full"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      This helps us provide more relevant legal information
-                    </p>
-                  </div>
-                  <Alert variant="default" className="bg-legal-yellow/20 border-legal-yellow">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription className="text-xs">
-                      By signing up, you acknowledge that LegalPocket provides information,
-                      not legal advice. Always consult with a qualified attorney for specific
-                      legal concerns.
-                    </AlertDescription>
-                  </Alert>
-                  <Button type="submit" className="w-full">
-                    Create Account
-                  </Button>
-                </form>
+                <SignUp path="/login" routing="path" />
+                <Alert variant="default" className="bg-legal-yellow/20 border-legal-yellow mt-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription className="text-xs">
+                    By signing up, you acknowledge that LegalPocket provides information,
+                    not legal advice. Always consult with a qualified attorney for specific
+                    legal concerns.
+                  </AlertDescription>
+                </Alert>
               </CardContent>
               <CardFooter className="flex flex-col">
                 <div className="mt-4 text-center text-sm text-muted-foreground">
@@ -190,3 +98,4 @@ const Login = () => {
 };
 
 export default Login;
+

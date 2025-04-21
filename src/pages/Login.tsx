@@ -13,7 +13,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [jurisdiction, setJurisdiction] = useState("");
+  const [jurisdiction, setJurisdiction] = useState("federal");
   const [activeTab, setActiveTab] = useState("login");
 
   const handleLogin = (e: React.FormEvent) => {
@@ -144,6 +144,7 @@ const Login = () => {
                   <div className="space-y-2">
                     <Label htmlFor="jurisdiction">Primary Jurisdiction</Label>
                     <JurisdictionSelector
+                      defaultValue={jurisdiction}
                       onSelect={(value) => setJurisdiction(value)}
                       className="w-full"
                     />

@@ -74,11 +74,16 @@ const jurisdictions = [
 export interface JurisdictionSelectorProps {
   onSelect?: (value: string) => void;
   className?: string;
+  defaultValue?: string;
 }
 
-export function JurisdictionSelector({ onSelect, className }: JurisdictionSelectorProps) {
+export function JurisdictionSelector({ 
+  onSelect, 
+  className,
+  defaultValue = "federal" 
+}: JurisdictionSelectorProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("federal");
+  const [value, setValue] = React.useState(defaultValue);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -90,7 +95,7 @@ export function JurisdictionSelector({ onSelect, className }: JurisdictionSelect
           className={cn("justify-between", className)}
         >
           {value
-            ? jurisdictions.find((jurisdiction) => jurisdiction.value === value)?.label
+            ? jurisdictions.find((jurisdiction) => jurisdiction.value === value)?.label || "Select jurisdiction..."
             : "Select jurisdiction..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -106,8 +111,8 @@ export function JurisdictionSelector({ onSelect, className }: JurisdictionSelect
                 value={jurisdiction.value}
                 onSelect={(currentValue) => {
                   const selectedValue = currentValue === value ? "" : currentValue;
-                  setValue(selectedValue || "federal");
-                  if (onSelect) onSelect(selectedValue);
+                  setValue(selectedValue || defaultValue);
+                  if (onSelect) onSelect(selectedValue || defaultValue);
                   setOpen(false);
                 }}
               >

@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,6 +9,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import {
   Popover,
@@ -114,24 +116,26 @@ export function JurisdictionSelector({
       <PopoverContent className="p-0 w-[300px]">
         <Command>
           <CommandInput placeholder="Search jurisdiction..." />
-          <CommandEmpty>No jurisdiction found.</CommandEmpty>
-          <CommandGroup className="max-h-[300px] overflow-y-auto">
-            {jurisdictions.map((jurisdiction) => (
-              <CommandItem
-                key={jurisdiction.value}
-                value={jurisdiction.value}
-                onSelect={handleSelect}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === jurisdiction.value ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                {jurisdiction.label}
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          <CommandList>
+            <CommandEmpty>No jurisdiction found.</CommandEmpty>
+            <CommandGroup className="max-h-[300px] overflow-y-auto">
+              {jurisdictions.map((jurisdiction) => (
+                <CommandItem
+                  key={jurisdiction.value}
+                  value={jurisdiction.value}
+                  onSelect={handleSelect}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === jurisdiction.value ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {jurisdiction.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>

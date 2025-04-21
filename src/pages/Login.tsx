@@ -32,6 +32,10 @@ const Login = () => {
     setActiveTab(value);
   };
 
+  const handleJurisdictionSelect = (value: string) => {
+    setJurisdiction(value);
+  };
+
   return (
     <div className="container flex items-center justify-center min-h-[calc(100vh-64px)] px-4 py-12">
       <div className="w-full max-w-md">
@@ -145,7 +149,7 @@ const Login = () => {
                     <Label htmlFor="jurisdiction">Primary Jurisdiction</Label>
                     <JurisdictionSelector
                       defaultValue={jurisdiction}
-                      onSelect={(value) => setJurisdiction(value)}
+                      onSelect={handleJurisdictionSelect}
                       className="w-full"
                     />
                     <p className="text-xs text-muted-foreground mt-1">

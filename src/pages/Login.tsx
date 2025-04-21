@@ -1,12 +1,9 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, AlertCircle } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { SignIn, SignUp } from "@clerk/clerk-react";
+import { Shield } from "lucide-react";
 
 const Login = () => {
   const [activeTab, setActiveTab] = useState("login");
@@ -25,13 +22,13 @@ const Login = () => {
             Legal information made accessible
           </p>
         </div>
-        
+
         <Tabs defaultValue="login" value={activeTab} onValueChange={handleTabChange}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="login">Login</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="login">
             <Card>
               <CardHeader>
@@ -41,7 +38,18 @@ const Login = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <SignIn path="/login" routing="path" />
+                {/* Placeholder login form */}
+                <form className="space-y-4">
+                  <div>
+                    <label className="block mb-1 text-sm font-medium">Email</label>
+                    <input className="w-full rounded border px-3 py-2" type="email" placeholder="you@example.com" autoComplete="email" />
+                  </div>
+                  <div>
+                    <label className="block mb-1 text-sm font-medium">Password</label>
+                    <input className="w-full rounded border px-3 py-2" type="password" placeholder="••••••••" autoComplete="current-password" />
+                  </div>
+                  <Button className="w-full mt-2">Login</Button>
+                </form>
               </CardContent>
               <CardFooter className="flex flex-col">
                 <div className="mt-4 text-center text-sm text-muted-foreground">
@@ -57,7 +65,7 @@ const Login = () => {
               </CardFooter>
             </Card>
           </TabsContent>
-          
+
           <TabsContent value="signup">
             <Card>
               <CardHeader>
@@ -67,15 +75,18 @@ const Login = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <SignUp path="/login" routing="path" />
-                <Alert variant="default" className="bg-legal-yellow/20 border-legal-yellow mt-4">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription className="text-xs">
-                    By signing up, you acknowledge that LegalPocket provides information,
-                    not legal advice. Always consult with a qualified attorney for specific
-                    legal concerns.
-                  </AlertDescription>
-                </Alert>
+                {/* Placeholder signup form */}
+                <form className="space-y-4">
+                  <div>
+                    <label className="block mb-1 text-sm font-medium">Email</label>
+                    <input className="w-full rounded border px-3 py-2" type="email" placeholder="you@example.com" autoComplete="email" />
+                  </div>
+                  <div>
+                    <label className="block mb-1 text-sm font-medium">Password</label>
+                    <input className="w-full rounded border px-3 py-2" type="password" placeholder="Create a password" autoComplete="new-password" />
+                  </div>
+                  <Button className="w-full mt-2">Sign Up</Button>
+                </form>
               </CardContent>
               <CardFooter className="flex flex-col">
                 <div className="mt-4 text-center text-sm text-muted-foreground">

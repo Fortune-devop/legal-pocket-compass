@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -85,6 +84,20 @@ export function JurisdictionSelector({
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(defaultValue);
 
+  const selectedLabel = React.useMemo(() => {
+    if (!value) return "Select jurisdiction...";
+    const found = jurisdictions.find(j => j.value === value);
+    return found ? found.label : "Select jurisdiction...";
+  }, [value]);
+
+  const handleSelect = React.useCallback((currentValue: string) => {
+    const selectedValue = currentValue === value ? "" : currentValue;
+    const finalValue = selectedValue || defaultValue;
+    setValue(finalValue);
+    if (onSelect) onSelect(finalValue);
+    setOpen(false);
+  }, [value, onSelect, defaultValue]);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -94,9 +107,7 @@ export function JurisdictionSelector({
           aria-expanded={open}
           className={cn("justify-between", className)}
         >
-          {value
-            ? jurisdictions.find((jurisdiction) => jurisdiction.value === value)?.label || "Select jurisdiction..."
-            : "Select jurisdiction..."}
+          {selectedLabel}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -109,12 +120,7 @@ export function JurisdictionSelector({
               <CommandItem
                 key={jurisdiction.value}
                 value={jurisdiction.value}
-                onSelect={(currentValue) => {
-                  const selectedValue = currentValue === value ? "" : currentValue;
-                  setValue(selectedValue || defaultValue);
-                  if (onSelect) onSelect(selectedValue || defaultValue);
-                  setOpen(false);
-                }}
+                onSelect={handleSelect}
               >
                 <Check
                   className={cn(

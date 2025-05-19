@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -89,7 +88,9 @@ export function UserDashboard() {
     <div className="container px-4 py-8 md:py-12 max-w-6xl mx-auto">
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-2">
-          <h1 className="font-heading text-3xl font-bold">Your Legal Dashboard</h1>
+          <h1 className="font-heading text-3xl font-bold">
+            Your Legal Dashboard
+          </h1>
           <p className="text-muted-foreground">
             Manage your conversations, saved resources, and account settings.
           </p>
@@ -115,21 +116,34 @@ export function UserDashboard() {
           <TabsContent value="conversations">
             <div className="grid gap-6">
               {conversations.map((convo) => (
-                <Card key={convo.id} className="overflow-hidden transition-all hover:shadow-md">
+                <Card
+                  key={convo.id}
+                  className="overflow-hidden transition-all hover:shadow-md"
+                >
                   <CardContent className="p-6">
                     <div className="flex flex-col gap-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <FileText className="h-5 w-5 text-primary" />
-                          <h3 className="font-heading font-semibold">{convo.title}</h3>
+                          <h3 className="font-heading font-semibold">
+                            {convo.title}
+                          </h3>
                         </div>
                         <Badge variant="outline">{convo.category}</Badge>
                       </div>
-                      <p className="text-muted-foreground text-sm">{convo.preview}</p>
+                      <p className="text-muted-foreground text-sm">
+                        {convo.preview}
+                      </p>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">{convo.date}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {convo.date}
+                        </span>
                         <div className="flex gap-2">
-                          <Button variant="ghost" size="sm" className="h-8 px-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 px-2"
+                          >
                             <Bookmark className="h-4 w-4" />
                             <span className="sr-only">Bookmark</span>
                           </Button>
@@ -149,20 +163,31 @@ export function UserDashboard() {
           <TabsContent value="bookmarks">
             <div className="grid gap-6">
               {bookmarks.map((bookmark) => (
-                <Card key={bookmark.id} className="overflow-hidden transition-all hover:shadow-md">
+                <Card
+                  key={bookmark.id}
+                  className="overflow-hidden transition-all hover:shadow-md"
+                >
                   <CardContent className="p-6">
                     <div className="flex flex-col gap-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <BookOpen className="h-5 w-5 text-primary" />
-                          <h3 className="font-heading font-semibold">{bookmark.title}</h3>
+                          <h3 className="font-heading font-semibold">
+                            {bookmark.title}
+                          </h3>
                         </div>
                         <Badge variant="secondary">{bookmark.type}</Badge>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">Saved on {bookmark.date}</span>
+                        <span className="text-xs text-muted-foreground">
+                          Saved on {bookmark.date}
+                        </span>
                         <div className="flex gap-2">
-                          <Button variant="ghost" size="sm" className="h-8 px-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 px-2"
+                          >
                             <Bookmark className="h-4 w-4 fill-primary" />
                             <span className="sr-only">Remove bookmark</span>
                           </Button>
@@ -197,10 +222,16 @@ export function UserDashboard() {
                       </div>
                     </Avatar>
                     <div className="text-center">
-                      <h3 className="font-heading font-semibold text-lg">Jane Doe</h3>
-                      <p className="text-sm text-muted-foreground">jane.doe@example.com</p>
+                      <h3 className="font-heading font-semibold text-lg">
+                        Jane Doe
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        jane.doe@example.com
+                      </p>
                     </div>
-                    <Button variant="outline" className="w-full">Edit Profile</Button>
+                    <Button variant="outline" className="w-full">
+                      Edit Profile
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -217,7 +248,9 @@ export function UserDashboard() {
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
-                        <Label htmlFor="save-history">Save conversation history</Label>
+                        <Label htmlFor="save-history">
+                          Save conversation history
+                        </Label>
                         <p className="text-sm text-muted-foreground">
                           Store your chat conversations for future reference
                         </p>
@@ -226,7 +259,10 @@ export function UserDashboard() {
                         id="save-history"
                         checked={privacySettings.saveHistory}
                         onCheckedChange={(checked) =>
-                          setPrivacySettings((prev) => ({ ...prev, saveHistory: checked }))
+                          setPrivacySettings((prev) => ({
+                            ...prev,
+                            saveHistory: checked,
+                          }))
                         }
                       />
                     </div>
@@ -235,16 +271,22 @@ export function UserDashboard() {
 
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
-                        <Label htmlFor="data-collection">Service improvement data</Label>
+                        <Label htmlFor="data-collection">
+                          Service improvement data
+                        </Label>
                         <p className="text-sm text-muted-foreground">
-                          Allow anonymous data collection to improve our services
+                          Allow anonymous data collection to improve our
+                          services
                         </p>
                       </div>
                       <Switch
                         id="data-collection"
                         checked={privacySettings.dataCollection}
                         onCheckedChange={(checked) =>
-                          setPrivacySettings((prev) => ({ ...prev, dataCollection: checked }))
+                          setPrivacySettings((prev) => ({
+                            ...prev,
+                            dataCollection: checked,
+                          }))
                         }
                       />
                     </div>
@@ -262,7 +304,10 @@ export function UserDashboard() {
                         id="third-party"
                         checked={privacySettings.thirdParty}
                         onCheckedChange={(checked) =>
-                          setPrivacySettings((prev) => ({ ...prev, thirdParty: checked }))
+                          setPrivacySettings((prev) => ({
+                            ...prev,
+                            thirdParty: checked,
+                          }))
                         }
                       />
                     </div>

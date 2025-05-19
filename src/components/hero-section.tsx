@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,7 @@ export function HeroSection() {
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,rgba(120,90,220,0.12),transparent_40%)]"></div>
       <div className="absolute inset-y-0 right-1/2 -z-10 mr-16 w-[200%] origin-bottom-left skew-x-[-30deg] bg-background shadow-xl shadow-primary/10 ring-1 ring-primary/5 md:mr-28 lg:mr-0 xl:mr-16 xl:origin-center"></div>
-      
+
       <div className="container px-4 md:px-6">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-16 items-center">
           <div className="flex flex-col gap-4">
@@ -29,30 +28,35 @@ export function HeroSection() {
               </span>
             </h1>
             <p className="text-muted-foreground text-lg md:text-xl max-w-xl">
-              Get straightforward answers to legal questions without the intimidating jargon or high costs.
+              Get straightforward answers to legal questions without the
+              intimidating jargon or high costs.
             </p>
-            
+
             <div className="mt-4 flex flex-col sm:flex-row gap-4">
-              <JurisdictionSelector 
-                onSelect={(value) => setJurisdiction(value)} 
+              <JurisdictionSelector
+                onSelect={(value) => setJurisdiction(value)}
                 className="w-full sm:w-auto"
               />
-              <Link to={`/chat?jurisdiction=${jurisdiction}`}>
+              <Link to="/waitlist">
                 <Button size="lg" className="w-full sm:w-auto gap-2">
                   <BookOpen className="h-5 w-5" />
-                  Start Legal Chat
+                  Join Our Waitlist
                 </Button>
               </Link>
             </div>
-            
-            <Alert variant="default" className="bg-legal-yellow/20 border-legal-yellow mt-6">
+
+            <Alert
+              variant="default"
+              className="bg-legal-yellow/20 border-legal-yellow mt-6"
+            >
               <AlertCircle className="h-4 w-4" />
               <AlertDescription className="text-sm">
-                LegalPocket provides information, not legal advice. Always consult with a qualified attorney for specific legal concerns.
+                LegalPocket provides information, not legal advice. Always
+                consult with a qualified attorney for specific legal concerns.
               </AlertDescription>
             </Alert>
           </div>
-          
+
           <div className="relative flex items-center justify-center">
             <div className="relative rounded-xl border bg-card p-4 shadow-lg">
               <div className="flex flex-col gap-6 px-2 py-4">
@@ -61,8 +65,12 @@ export function HeroSection() {
                     <Scale className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-heading font-semibold leading-none">Friendly Legal Guidance</h3>
-                    <p className="text-sm text-muted-foreground">Without the complexities</p>
+                    <h3 className="font-heading font-semibold leading-none">
+                      Friendly Legal Guidance
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Without the complexities
+                    </p>
                   </div>
                 </div>
                 <div className="space-y-4">
@@ -71,15 +79,21 @@ export function HeroSection() {
                   </div>
                   <div className="chat-bubble-ai">
                     <p>
-                      Generally, landlords need to provide notice before entering your apartment, except in emergencies. 
+                      Generally, landlords need to provide notice before
+                      entering your apartment, except in emergencies.
                       <span className="block mt-2 italic text-sm text-muted-foreground">
-                        Based on <span className="legal-citation">Tenant Rights Act §42</span>
+                        Based on{" "}
+                        <span className="legal-citation">
+                          Tenant Rights Act §42
+                        </span>
                       </span>
                     </p>
                   </div>
                 </div>
                 <div className="flex justify-end">
-                  <Button variant="outline" size="sm" className="text-xs">Continue reading</Button>
+                  <Button variant="outline" size="sm" className="text-xs">
+                    Continue reading
+                  </Button>
                 </div>
               </div>
             </div>

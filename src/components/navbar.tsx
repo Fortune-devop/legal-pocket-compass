@@ -35,7 +35,6 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Desktop navigation */}
         <nav className="hidden md:flex items-center gap-6">
           {/* Only show these links to authenticated users */}
           {isLoaded && isSignedIn && (
@@ -117,7 +116,6 @@ export function Navbar() {
           <ThemeSwitch />
         </nav>
 
-        {/* Mobile menu button */}
         <div className="flex md:hidden gap-2 items-center">
           {isLoaded && isSignedIn && <UserMenu />}
           <ThemeSwitch />
@@ -132,7 +130,6 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden py-4 px-6 border-b border-border animate-fade-in bg-background/95 backdrop-blur-sm">
           <nav className="flex flex-col gap-4">

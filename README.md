@@ -1,73 +1,100 @@
-# Welcome to your Lovable project
+# Legal Pocket Compass 🧭⚖️
 
-## Project info
+A modern, user-friendly legal assistance platform that makes legal information accessible to everyone through plain language explanations and jurisdiction-aware guidance.
 
-**URL**: https://lovable.dev/projects/fbdee1a4-b029-4222-b460-b0f6b83e7596
+## 🌟 Overview
 
-## How can I edit this code?
+Legal Pocket Compass is a full-stack web application designed to democratize legal information. It provides users with easy-to-understand legal guidance by translating complex legal concepts into plain language while maintaining accuracy and providing jurisdiction-specific information.
 
-There are several ways of editing your application.
+### Key Features
 
-**Use Lovable**
+- **🤖 AI-Powered Chat Interface** - Get instant legal guidance through natural conversation
+- **🗺️ Jurisdiction Awareness** - Location-specific legal information and advice
+- **📚 Plain Language Explanations** - Complex legal concepts explained simply
+- **🔐 Secure Authentication** - AWS Cognito integration for user management
+- **📱 Responsive Design** - Works seamlessly across all devices
+- **⚡ Real-time Updates** - Live chat with instant responses
+- **👥 Waitlist Management** - Controlled access with admin approval system
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/fbdee1a4-b029-4222-b460-b0f6b83e7596) and start prompting.
+## 🏗️ Architecture
 
-Changes made via Lovable will be committed automatically to this repo.
+### Frontend
+- **React 18** with TypeScript for type safety
+- **Vite** for fast development and building
+- **Tailwind CSS** for modern, responsive styling
+- **shadcn/ui** for beautiful, accessible components
+- **React Router** for client-side routing
+- **React Query** for efficient data fetching
+- **AWS Amplify** for authentication and cloud services
 
-**Use your preferred IDE**
+### Backend
+- **Node.js** with Express.js framework
+- **MongoDB** with Mongoose ODM for data persistence
+- **AWS JWT Verification** for secure authentication
+- **Swagger/OpenAPI** for comprehensive API documentation
+- **CORS** enabled for cross-origin requests
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-Follow these steps:
+6. **Access the application**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:4000
+   - API Documentation: http://localhost:4000/api-docs
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🛠️ Development
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Code Style
+- TypeScript for type safety
+- ESLint for code linting
+- Prettier for code formatting
+- Conventional commits for version control
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+### Testing
+- Frontend: React Testing Library (planned)
+- Backend: Jest (planned)
 
-**Edit a file directly in GitHub**
+### Deployment
+- Frontend: Vercel/Netlify ready
+- Backend: AWS EC2/Heroku ready
+- Database: MongoDB Atlas
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🔐 Security Features
 
-**Use GitHub Codespaces**
+- JWT-based authentication with AWS Cognito
+- CORS protection
+- Environment variable management
+- Input validation and sanitization
+- Rate limiting (planned)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 📊 API Documentation
 
-## What technologies are used for this project?
+The backend includes comprehensive API documentation using Swagger/OpenAPI. Access it at:
+- Development: http://localhost:4000/api-docs
+- Production: https://your-domain.com/api-docs
 
-This project is built with:
+## 🤝 Contributing
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## How can I deploy this project?
+## 📄 License
 
-Simply open [Lovable](https://lovable.dev/projects/fbdee1a4-b029-4222-b460-b0f6b83e7596) and click on Share -> Publish.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Can I connect a custom domain to my Lovable project?
+## 🙏 Acknowledgments
 
-Yes, you can!
+- Built with [shadcn/ui](https://ui.shadcn.com/) components
+- Powered by [AWS Amplify](https://aws.amazon.com/amplify/)
+- Styled with [Tailwind CSS](https://tailwindcss.com/)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 📞 Support
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+For support, email linusfortune54@gmail.com or join our Discord community.
+
+---
+
+**Legal Pocket Compass** - Making legal information accessible to everyone. ⚖️✨

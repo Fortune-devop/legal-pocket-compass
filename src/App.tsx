@@ -1,14 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Layout } from "@/components/layout";
-import {
-  SignedIn,
-  SignedOut,
-  useAuth,
-  ClerkLoaded,
-  ClerkProvider,
-  useUser,
-} from "@clerk/clerk-react";
+import { AuthProvider, useUser } from "@/contexts/AuthContext";
+
 import Index from "./pages/Index";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import Login from "./pages/Login";
@@ -53,10 +47,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 
   return (
     <>
-      <SignedIn>{children}</SignedIn>
-      <SignedOut>
-        <Navigate to="/login" replace />
-      </SignedOut>
+      {isSignedIn ? children : <Navigate to="/login" replace />}
     </>
   );
 };
@@ -117,16 +108,9 @@ const App = () => (
 );
 
 const Root = () => (
-  <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
-    <ClerkLoaded>
-      <div style={{ position: "fixed", bottom: 0, right: 0, zIndex: 9999 }}>
-        <button onClick={() => (window as any).Clerk?.openUserProfile()}>
-          Debug Auth
-        </button>
-      </div>
-    </ClerkLoaded>
+  <AuthProvider>
     <App />
-  </ClerkProvider>
+  </AuthProvider>
 );
 
 export default Root;

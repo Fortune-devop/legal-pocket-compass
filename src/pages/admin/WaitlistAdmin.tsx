@@ -1,29 +1,21 @@
 import { useState, useEffect } from "react";
-import { useClerk, useAuth } from "@clerk/clerk-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/AuthContext";
 
-type WaitlistedUser = {
+interface WaitlistedUser {
   id: string;
   email: string;
-  name: string;
-  joinedAt: string;
-  approved: boolean;
-};
+  waitlisted: boolean;
+  createdAt: string;
+  approved?: boolean;
+}
 
 const WaitlistAdmin = () => {
   const [users, setUsers] = useState<WaitlistedUser[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { getToken } = useAuth(); // Use Clerk's useAuth hook
+  const { getToken } = useAuth(); // Use our custom useAuth hook
 
   useEffect(() => {
     fetchWaitlistedUsers();
@@ -34,7 +26,7 @@ const WaitlistAdmin = () => {
     try {
       console.log("Fetching waitlisted users...");
 
-      // Get the session token from Clerk
+      // Get the session token from our auth context
       const token = await getToken();
       console.log("Auth token available:", !!token);
 
@@ -112,51 +104,44 @@ const WaitlistAdmin = () => {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="flex justify-center py-8">Loading...</div>
+            <div className="text-center py-8">Loading waitlisted users...</div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Joined</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {users.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>
-                      {new Date(user.joinedAt).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
+            <div className="space-y-4">
+              {users.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  No waitlisted users found.
+                </div>
+              ) : (
+                users.map((user) => (
+                  <div
+                    key={user.id}
+                    className="flex items-center justify-between p-4 border rounded-lg"
+                  >
+                    <div>
+                      <p className="font-medium">{user.email}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Joined: {new Date(user.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
                       {user.approved ? (
-                        <Badge variant="default">Approved</Badge>
+                        <Badge variant="secondary">Approved</Badge>
                       ) : (
-                        <Badge variant="secondary">Waiting</Badge>
+                        <Badge variant="outline">Pending</Badge>
                       )}
-                    </TableCell>
-                    <TableCell>
                       {!user.approved && (
-                        <Button size="sm" onClick={() => approveUser(user.id)}>
+                        <Button
+                          size="sm"
+                          onClick={() => approveUser(user.id)}
+                        >
                           Approve
                         </Button>
                       )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {users.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-4">
-                      No users in the waitlist
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           )}
         </CardContent>
       </Card>

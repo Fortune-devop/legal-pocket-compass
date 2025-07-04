@@ -9,12 +9,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useUser, useClerk } from "@clerk/clerk-react";
+
 import { LogOut, Settings, User } from "lucide-react";
+import { useUser, useAuth } from "@/contexts/AuthContext";
 
 export function UserMenu() {
   const { user } = useUser();
-  const { signOut } = useClerk();
+  const { signOut } = useAuth();
 
   if (!user) return null;
 
@@ -33,7 +34,7 @@ export function UserMenu() {
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{user.fullName}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user.emailAddresses[0]?.emailAddress}
+              {user.email}
             </p>
           </div>
         </DropdownMenuLabel>

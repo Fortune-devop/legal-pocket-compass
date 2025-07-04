@@ -5,7 +5,7 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { BookOpen, FileText, Menu, User, X, Shield } from "lucide-react";
 import { LegalPocketIcon } from "@/components/icons";
 import { UserMenu } from "@/components/user-menu";
-import { useUser } from "@clerk/clerk-react";
+import { useUser } from "@/contexts/AuthContext";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,76 +26,80 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur-sm border-b border-border">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Link to="/" className="flex items-center gap-2">
-            <LegalPocketIcon className="h-8 w-8 text-primary" />
-            <span className="font-heading font-bold text-xl">LegalPocket</span>
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 max-w-screen-2xl items-center">
+        {/* Left: Logo and Nav Links */}
+        <div className="mr-4 hidden md:flex items-center flex-1">
+          <Link to="/" className="mr-6 flex items-center space-x-2">
+            <LegalPocketIcon className="h-6 w-6" />
+            <span className="hidden font-bold sm:inline-block">
+              LegalPocket
+            </span>
           </Link>
-        </div>
-
-        <nav className="hidden md:flex items-center gap-6">
-          {/* Only show these links to authenticated users */}
-          {isLoaded && isSignedIn && (
-            <>
-              <Link
-                to="/chat"
-                className={`flex items-center gap-1.5 ${
-                  isActive("/chat")
-                    ? "text-foreground font-medium"
-                    : "text-muted-foreground hover:text-foreground"
-                } transition-colors`}
-              >
-                <BookOpen
-                  size={16}
-                  className={isActive("/chat") ? "text-primary" : ""}
-                />
-                <span>Chat</span>
-              </Link>
-              <Link
-                to="/dashboard"
-                className={`flex items-center gap-1.5 ${
-                  isActive("/dashboard")
-                    ? "text-foreground font-medium"
-                    : "text-muted-foreground hover:text-foreground"
-                } transition-colors`}
-              >
-                <FileText
-                  size={16}
-                  className={isActive("/dashboard") ? "text-primary" : ""}
-                />
-                <span>Dashboard</span>
-              </Link>
-              {/* Admin link - only for admin users */}
-              {isAdmin && (
+          <nav className="flex items-center space-x-6 text-sm font-medium">
+            {isLoaded && isSignedIn && (
+              <>
                 <Link
-                  to="/admin/waitlist"
+                  to="/chat"
                   className={`flex items-center gap-1.5 ${
-                    isActive("/admin/waitlist")
+                    isActive("/chat")
                       ? "text-foreground font-medium"
                       : "text-muted-foreground hover:text-foreground"
                   } transition-colors`}
                 >
-                  <Shield
+                  <BookOpen
                     size={16}
                     className={
-                      isActive("/admin/waitlist") ? "text-primary" : ""
+                      isActive("/chat") ? "text-primary" : ""
                     }
                   />
-                  <span>Admin</span>
+                  <span>Chat</span>
                 </Link>
-              )}
-              <div className="ml-2 h-6 w-px bg-border"></div> {/* Separator */}
-            </>
-          )}
+                <Link
+                  to="/dashboard"
+                  className={`flex items-center gap-1.5 ${
+                    isActive("/dashboard")
+                      ? "text-foreground font-medium"
+                      : "text-muted-foreground hover:text-foreground"
+                  } transition-colors`}
+                >
+                  <FileText
+                    size={16}
+                    className={
+                      isActive("/dashboard") ? "text-primary" : ""
+                    }
+                  />
+                  <span>Dashboard</span>
+                </Link>
+                {isAdmin && (
+                  <Link
+                    to="/admin/waitlist"
+                    className={`flex items-center gap-1.5 ${
+                      isActive("/admin/waitlist")
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground hover:text-foreground"
+                    } transition-colors`}
+                  >
+                    <Shield
+                      size={16}
+                      className={
+                        isActive("/admin/waitlist") ? "text-primary" : ""
+                      }
+                    />
+                    <span>Admin</span>
+                  </Link>
+                )}
+              </>
+            )}
+          </nav>
+        </div>
 
-          {/* Authentication UI */}
+        {/* Right: Auth UI and ThemeSwitch */}
+        <div className="hidden md:flex items-center space-x-2">
           {isLoaded && isSignedIn ? (
             <UserMenu />
           ) : (
             <>
-              {/* For non-authenticated users, show sign in and waitlist */}
               <Link to="/login">
                 <Button variant="ghost" size="sm" className="gap-2">
                   <User size={16} />
@@ -114,11 +118,10 @@ export function Navbar() {
             </>
           )}
           <ThemeSwitch />
-        </nav>
+        </div>
 
-        <div className="flex md:hidden gap-2 items-center">
-          {isLoaded && isSignedIn && <UserMenu />}
-          <ThemeSwitch />
+        {/* Only show menu toggle in mobile */}
+        <div className="flex flex-1 items-center justify-end md:hidden">
           <Button
             variant="ghost"
             size="icon"
@@ -130,6 +133,7 @@ export function Navbar() {
         </div>
       </div>
 
+      {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden py-4 px-6 border-b border-border animate-fade-in bg-background/95 backdrop-blur-sm">
           <nav className="flex flex-col gap-4">
@@ -176,6 +180,7 @@ export function Navbar() {
                     <span>Admin</span>
                   </Link>
                 )}
+                <UserMenu />
               </>
             ) : (
               <>
@@ -195,8 +200,10 @@ export function Navbar() {
                     <span>Join the Waitlist</span>
                   </Button>
                 </Link>
+                <UserMenu />
               </>
             )}
+            <ThemeSwitch />
           </nav>
         </div>
       )}

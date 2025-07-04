@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertCircle, Shield } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useSignIn, useSignUp } from "@clerk/clerk-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -25,8 +25,14 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const { signIn, setActive: setActiveSignIn } = useSignIn();
-  const { signUp, setActive: setActiveSignUp } = useSignUp();
+  const { signIn, signUp, forceSignOut, isSignedIn, user } = useAuth();
+
+  // If user is already signed in, redirect to dashboard
+  useEffect(() => {
+    if (isSignedIn && user) {
+      navigate("/dashboard");
+    }
+  }, [isSignedIn, user, navigate]);
 
   const validateForm = (isSignup: boolean) => {
     if (!email || !password) {
@@ -56,15 +62,10 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const signInAttempt = await signIn?.create({
-        identifier: email,
-        password,
-      });
+      const result = await signIn(email, password);
 
-      if (signInAttempt?.status === "complete") {
-        await setActiveSignIn?.({ session: signInAttempt.createdSessionId });
-
-        if ((signInAttempt.userData as any)?.unsafeMetadata?.waitlisted) {
+      if (result.status === "complete") {
+        if (result.user?.unsafeMetadata?.waitlisted) {
           navigate("/waitlist-confirmation");
         } else {
           navigate("/dashboard");
@@ -72,7 +73,7 @@ const Login = () => {
       }
     } catch (err: any) {
       setError(
-        err.errors?.[0]?.longMessage || "Login failed. Please try again."
+        err.message || "Login failed. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -86,28 +87,22 @@ const Login = () => {
 
     setIsLoading(true);
     try {
-      const signUpAttempt = await signUp?.create({
-        emailAddress: email,
-        password,
+      const result = await signUp(email, password, {
+        firstName: name.split(' ')[0],
+        lastName: name.split(' ').slice(1).join(' '),
+        unsafeMetadata: { waitlisted: true }
       });
 
-      if (signUpAttempt?.status === "complete") {
-        await setActiveSignUp?.({ session: signUpAttempt.createdSessionId });
+      if (result.status === "complete") {
         navigate("/dashboard");
       } else {
-        // Prepare verification before navigating
-        await signUp?.prepareEmailAddressVerification({
-          strategy: "email_code",
-        });
-
         // Store email in sessionStorage to help user experience
         sessionStorage.setItem("pendingVerificationEmail", email);
-
         navigate("/verify-email");
       }
     } catch (err: any) {
       setError(
-        err.errors?.[0]?.longMessage || "Signup failed. Please try again."
+        err.message || "Signup failed. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -194,7 +189,7 @@ const Login = () => {
                   </Button>
                 </form>
               </CardContent>
-              <CardFooter className="flex flex-col">
+              <CardFooter>
                 <div className="mt-4 text-center text-sm text-muted-foreground">
                   Don't have an account?{" "}
                   <Button
@@ -208,7 +203,7 @@ const Login = () => {
               </CardFooter>
             </Card>
           </TabsContent>
-          {/* Signup Tab */}
+          
           <TabsContent value="signup">
             <Card>
               <CardHeader>
@@ -218,7 +213,7 @@ const Login = () => {
                   program
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent>
                 <div className="bg-muted/50 p-4 rounded-lg text-center">
                   <p className="text-sm text-muted-foreground mb-3">
                     LegalPocket is currently in private beta. Please join our

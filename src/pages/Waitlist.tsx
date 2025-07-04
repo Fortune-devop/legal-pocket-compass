@@ -1,25 +1,25 @@
 import { useState } from "react";
-import { useSignUp } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Shield } from "lucide-react";
+import { AlertCircle, BookOpen } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Waitlist = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { signUp } = useSignUp();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,119 +27,127 @@ const Waitlist = () => {
     setIsLoading(true);
 
     try {
-      // 1. Create a Clerk user
-      const signUpAttempt = await signUp?.create({
-        emailAddress: email,
-        unsafeMetadata: {
-          waitlisted: true,
-          joinedWaitlistAt: new Date().toISOString(),
+      // Add to MongoDB waitlist
+      const response = await fetch('/api/waitlist/join', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      });
-
-      if (!signUpAttempt?.id) {
-        throw new Error("Failed to create user account");
-      }
-
-      // 2. Also store in our database
-      const response = await fetch("/api/admin/join-waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          clerkUserId: signUpAttempt.id,
-          email: email,
+          email,
           fullName: name,
+          firstName: name.split(' ')[0],
+          lastName: name.split(' ').slice(1).join(' '),
+          metadata: { waitlisted: true }
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to add to waitlist database");
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to join waitlist');
       }
 
-      // 3. Prepare email verification
-      await signUp?.prepareEmailAddressVerification({
-        strategy: "email_code",
-      });
-
-      setSubmitted(true);
+      // Successfully joined waitlist
+      setIsSuccess(true);
     } catch (err: any) {
       setError(
-        err.errors?.[0]?.longMessage ||
-          "Failed to join waitlist. Please try again."
+        err.message || "Failed to join waitlist. Please try again."
       );
     } finally {
       setIsLoading(false);
     }
   };
 
-  return (
-    <div className="container flex items-center justify-center min-h-[calc(100vh-64px)] px-4 py-12">
-      <div className="w-full max-w-md">
-        <div className="flex flex-col items-center mb-6">
-          <Shield className="h-12 w-12 text-primary" />
-          <h1 className="font-heading text-2xl font-bold mt-2">
-            Join the LegalPocket Waitlist
-          </h1>
-          <p className="text-muted-foreground text-center mt-1">
-            Be the first to access our legal assistance platform
-          </p>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Request Early Access</CardTitle>
+  if (isSuccess) {
+    return (
+      <div className="container flex items-center justify-center min-h-[calc(100vh-64px)] px-4 py-12">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+              <BookOpen className="h-6 w-6 text-green-600" />
+            </div>
+            <CardTitle>Welcome to the Waitlist!</CardTitle>
             <CardDescription>
-              Join our waitlist to get notified when we launch
+              You've successfully joined our waitlist. We'll notify you as soon as
+              your account is approved.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {submitted ? (
-              <div className="text-center py-8">
-                <h3 className="text-xl font-bold text-primary mb-2">
-                  Thanks for joining!
-                </h3>
-                <p className="text-muted-foreground">
-                  We've added you to our waitlist. We'll notify you when we're
-                  ready.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="John Doe"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="your.email@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                {error && <p className="text-red-500 text-sm">{error}</p>}
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Processing..." : "Join Waitlist"}
-                </Button>
-              </form>
-            )}
+            <Button
+              onClick={() => navigate("/login")}
+              className="w-full"
+            >
+              Go to Login
+            </Button>
           </CardContent>
-          <CardFooter className="flex justify-center">
-            <p className="text-xs text-muted-foreground">
-              We'll never share your information with third parties.
-            </p>
-          </CardFooter>
         </Card>
       </div>
+    );
+  }
+
+  return (
+    <div className="container flex items-center justify-center min-h-[calc(100vh-64px)] px-4 py-12">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+            <BookOpen className="h-6 w-6 text-primary" />
+          </div>
+          <CardTitle>Join Our Waitlist</CardTitle>
+          <CardDescription>
+            LegalPocket is currently in private beta. Join our waitlist to get
+            early access when spots become available.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="john.doe@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Joining Waitlist..." : "Join Waitlist"}
+            </Button>
+          </form>
+
+          <div className="mt-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <Button
+                variant="link"
+                className="p-0 h-auto text-primary"
+                onClick={() => navigate("/login")}
+              >
+                Sign in
+              </Button>
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

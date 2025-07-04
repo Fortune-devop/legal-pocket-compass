@@ -1,11 +1,11 @@
 import { UserDashboard } from "@/components/user-dashboard";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Dashboard = () => {
-  const { isLoaded, isSignedIn, userId } = useAuth();
+  const { isLoaded, isSignedIn, user } = useAuth();
 
   // Log this to check auth status
-  console.log("Auth status:", { isLoaded, isSignedIn, userId });
+  console.log("Auth status:", { isLoaded, isSignedIn, user });
 
   return (
     <div className="min-h-[calc(100vh-64px)]">

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useSignUp, useAuth, useUser } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@/contexts/AuthContext";
 
 const VerifyEmail = () => {
   const [code, setCode] = useState("");
@@ -12,7 +12,7 @@ const VerifyEmail = () => {
   const [error, setError] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState("");
   const navigate = useNavigate();
-  const { signUp } = useSignUp();
+  const { confirmSignUp, resendConfirmationCode } = useAuth();
   const { user } = useUser();
 
   useEffect(() => {
@@ -20,8 +20,8 @@ const VerifyEmail = () => {
     const email = sessionStorage.getItem("pendingVerificationEmail");
     if (email) setUserEmail(email);
 
-    // Check if we have an active signUp - if not, redirect to signup
-    if (!signUp?.status) {
+    // Check if we have a user - if not, redirect to signup
+    if (!user) {
       navigate("/");
     }
   }, []);
@@ -32,16 +32,9 @@ const VerifyEmail = () => {
     setIsLoading(true);
 
     try {
-      const attempt = await signUp?.attemptEmailAddressVerification({
-        code,
-      });
+      const attempt = await confirmSignUp(userEmail, code);
 
       if (attempt?.status === "complete") {
-        // THIS IS THE IMPORTANT PART - Set the active session after verification
-        if (attempt.createdSessionId) {
-          // Handle session activation here if necessary
-          console.log("Session activated with ID:", attempt.createdSessionId);
-        }
         if (user?.unsafeMetadata?.waitlisted) {
           navigate("/waitlist-confirmation");
         } else {
@@ -52,7 +45,7 @@ const VerifyEmail = () => {
       }
     } catch (err: any) {
       setError(
-        err.errors?.[0]?.longMessage || "Verification failed. Please try again."
+        err.message || "Verification failed. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -62,12 +55,12 @@ const VerifyEmail = () => {
   const handleResendCode = async () => {
     setIsLoading(true);
     try {
-      await signUp?.prepareEmailAddressVerification({ strategy: "email_code" });
+      await resendConfirmationCode(userEmail);
       setError(null);
       alert("Verification code resent to your email");
     } catch (err: any) {
       setError(
-        err.errors?.[0]?.longMessage ||
+        err.message ||
           "Failed to resend code. Please try again."
       );
     } finally {

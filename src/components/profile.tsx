@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/clerk-react";
+import { useUser } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -21,7 +21,7 @@ export function Profile() {
           <div>
             <h2 className="text-2xl font-bold">{user.fullName}</h2>
             <p className="text-muted-foreground">
-              {user.emailAddresses[0]?.emailAddress}
+              {user.email}
             </p>
           </div>
         </div>

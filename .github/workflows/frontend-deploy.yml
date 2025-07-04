@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'src/**'
-      - 'public/**'
-      - 'package.json'
-      - 'vite.config.ts'
-      - 'tailwind.config.ts'
+      - 'frontend/src/**'
+      - 'frontend/public/**'
+      - 'frontend/package.json'
+      - 'frontend/vite.config.ts'
+      - 'frontend/tailwind.config.ts'
       - '.github/workflows/frontend-deploy.yml'
   pull_request:
     branches: [ main ]

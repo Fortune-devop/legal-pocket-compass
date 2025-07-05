@@ -30,11 +30,11 @@ jobs:
 
       - name: Inject .env file from PROD_ENV
         run: |
-          echo "${{ secrets.PROD_ENV }}" > legalpocket/legalpocket/backend/.env
+          echo "${{ secrets.PROD_ENV }}" > legalpocket/backend/.env
 
       - name: Run backend tests (if any)
         run: |
-          cd legalpocket/legalpocket/backend
+          cd legalpocket/backend
           npm test --if-present
 
       - name: Install PM2
@@ -42,8 +42,8 @@ jobs:
 
       - name: Restart backend service with PM2
         run: |
-          cd legalpocket/legalpocket/backend
-          pm2 restart legal-pocket-compass-api || pm2 start app.js --name legal-pocket-compass-api
+          cd legalpocket/backend
+          pm2 restart legal-pocket-compass-api || pm2 start app.js --name legalpocket-api
           pm2 save
 
       - name: ✅ Done

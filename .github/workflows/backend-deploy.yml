@@ -16,6 +16,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Debug directory structure
+        run: |
+          pwd
+          ls -la
+          find . -name "backend" -type d
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -25,16 +31,16 @@ jobs:
 
       - name: Install backend dependencies
         run: |
-          cd legalpocket/legalpocket/backend
+          cd backend
           npm ci
 
       - name: Inject .env file from PROD_ENV
         run: |
-          echo "${{ secrets.PROD_ENV }}" > legalpocket/backend/.env
+          echo "${{ secrets.PROD_ENV }}" > backend/.env
 
       - name: Run backend tests (if any)
         run: |
-          cd legalpocket/backend
+          cd backend
           npm test --if-present
 
       - name: Install PM2
@@ -42,7 +48,7 @@ jobs:
 
       - name: Restart backend service with PM2
         run: |
-          cd legalpocket/backend
+          cd backend
           pm2 restart legal-pocket-compass-api || pm2 start app.js --name legalpocket-api
           pm2 save
 

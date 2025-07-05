@@ -37,10 +37,13 @@ jobs:
           cd backend
           npm test --if-present
 
+      - name: Install PM2
+        run: npm install -g pm2
+
       - name: Restart backend service with PM2
         run: |
           cd backend
-          pm2 restart legal-pocket-compass-api || pm2 start index.js --name legal-pocket-compass-api
+          pm2 restart legal-pocket-compass-api || pm2 start app.js --name legal-pocket-compass-api
           pm2 save
 
       - name: ✅ Done

@@ -10,51 +10,38 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-    
+    runs-on: self-hosted  # Now using your EC2 runner
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: backend/package-lock.json
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
 
-    - name: Install backend dependencies
-      run: |
-        cd backend
-        npm ci
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm ci
 
-    - name: Run backend tests (if any)
-      run: |
-        cd backend
-        npm test --if-present
+      - name: Inject .env file from PROD_ENV
+        run: |
+          echo "${{ secrets.PROD_ENV }}" > backend/.env
 
-    - name: Deploy to EC2
-      if: github.ref == 'refs/heads/main'
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        port: ${{ secrets.EC2_PORT }}
-        script: |
-          # Navigate to project directory
-          cd /var/www/legal-pocket-compass
-          
-          # Pull latest changes
-          git pull origin main
-          
-          # Install dependencies
-          npm ci --production
-          
-          # Restart the application
-          pm2 restart legal-pocket-compass-api
-          
-          # Save PM2 configuration
+      - name: Run backend tests (if any)
+        run: |
+          cd backend
+          npm test --if-present
+
+      - name: Restart backend service with PM2
+        run: |
+          cd backend
+          pm2 restart legal-pocket-compass-api || pm2 start index.js --name legal-pocket-compass-api
           pm2 save
-          
-          echo "Backend deployment completed successfully!" 
+
+      - name: ✅ Done
+        run: echo "Backend deployment completed successfully on self-hosted runner!"

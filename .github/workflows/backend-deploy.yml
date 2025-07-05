@@ -11,6 +11,9 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted  # Now using your EC2 runner
+    strategy:
+      matrix:
+        node-version: [18.x]
 
     steps:
       - name: Checkout code
@@ -36,7 +39,10 @@ jobs:
 
       - name: Inject .env file from PROD_ENV
         run: |
-          echo "${{ secrets.PROD_ENV }}" > backend/.env
+          cd backend
+          touch .env
+          echo "${{ secrets.PROD_ENV }}" > .env
+          ls -la .env
 
       - name: Run backend tests (if any)
         run: |

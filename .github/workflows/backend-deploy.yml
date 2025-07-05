@@ -21,20 +21,20 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: backend/package-lock.json
+          cache-dependency-path: legalpocket/backend/package-lock.json
 
       - name: Install backend dependencies
         run: |
-          cd backend
+          cd legalpocket/legalpocket/backend
           npm ci
 
       - name: Inject .env file from PROD_ENV
         run: |
-          echo "${{ secrets.PROD_ENV }}" > backend/.env
+          echo "${{ secrets.PROD_ENV }}" > legalpocket/legalpocket/backend/.env
 
       - name: Run backend tests (if any)
         run: |
-          cd backend
+          cd legalpocket/legalpocket/backend
           npm test --if-present
 
       - name: Install PM2
@@ -42,7 +42,7 @@ jobs:
 
       - name: Restart backend service with PM2
         run: |
-          cd backend
+          cd legalpocket/legalpocket/backend
           pm2 restart legal-pocket-compass-api || pm2 start app.js --name legal-pocket-compass-api
           pm2 save
 

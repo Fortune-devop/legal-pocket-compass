@@ -31,7 +31,7 @@ const WaitlistAdmin = () => {
       console.log("Auth token available:", !!token);
 
       // Include the token in your request
-      const response = await fetch("/api/admin/waitlist", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/waitlist`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -72,7 +72,7 @@ const WaitlistAdmin = () => {
     try {
       const token = await getToken();
 
-      const response = await fetch("/api/admin/approve-user", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/approve-user`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
